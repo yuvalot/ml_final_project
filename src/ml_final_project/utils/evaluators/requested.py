@@ -16,7 +16,6 @@ def pr_auc(y_true, y_pred):
         if binary class: pr_auc(y_true, y_pred[:,1])'''
     y_true_bin = label_binarize(y_true, classes=np.unique(y_true))
     n_classes = y_true_bin.shape[1]
-    print(n_classes)
     if n_classes > 2:
         auc_roc = roc_auc_score(y_true, y_pred,multi_class='ovr')
         # For each class

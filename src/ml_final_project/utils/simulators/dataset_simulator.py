@@ -1,5 +1,6 @@
+import numpy as np
 import pandas as pd
-from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 
 from ..evaluators.requested import requested_evaluator
 from ..hyperparameters.hyperparameter_scanner import HyperParameterScanner
@@ -32,7 +33,7 @@ class DatasetSimulator:
         kf = StratifiedKFold(n_splits=10, random_state=None, shuffle=False)
         results = []
 
-        for i, (train_index, test_index) in enumerate(kf.split(self.X, self.y)):
+        for i, (train_index, test_index) in enumerate(kf.split(self.X, np.argmax(self.y, axis=1))):
             X_train, X_test = self.X[train_index], self.X[test_index]
             y_train, y_test = self.y[train_index], self.y[test_index]
             evaluation, training_time, hp = self.evaluate_batch(X_train, X_test, y_train, y_test)
