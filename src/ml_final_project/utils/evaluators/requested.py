@@ -16,7 +16,6 @@ def pr_auc(y_true, y_pred):
         if binary class: pr_auc(y_true, y_pred[:,1])'''
     y_true_bin = label_binarize(y_true, classes=np.unique(y_true))
     n_classes = y_true_bin.shape[1]
-    print(n_classes)
     if n_classes > 2:
         auc_roc = roc_auc_score(y_true, y_pred,multi_class='ovr')
         # For each class
@@ -53,7 +52,6 @@ def requested_evaluator(model, X_test, y_test):
     res['AUC'] = AUC
     res['PR-Curve'] = PR_AUC
 
-    # print(classification_report(y_true, y_pred))
     accuracy = accuracy_score(y_true, y_pred)
     cnf_matrix = confusion_matrix(y_true, y_pred)
     FP = cnf_matrix.sum(axis=0) - np.diag(cnf_matrix)
