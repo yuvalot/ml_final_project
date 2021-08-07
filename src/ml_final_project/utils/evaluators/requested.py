@@ -36,14 +36,11 @@ def pr_auc(y_true, y_pred):
 
 
 def requested_evaluator(model, X_test, y_test):
-    start_training_time = datetime.now()
     y_proba = model.predict(X_test)
-    end_training_time = datetime.now()
-    inference_time = (end_training_time - start_training_time).total_seconds() * (1000 / X_test.shape[0])
     y_pred = np.argmax(y_proba, axis=1)
     y_true = np.argmax(y_test, axis=1)
-    res = {'Inference Time': inference_time}
 
+    res = {}
     if y_proba.shape[1] > 2: # multiclass version
         AUC = roc_auc_score(y_true, y_proba, average='macro', multi_class='ovr')
         PR_AUC = pr_auc(y_true, y_proba)
@@ -51,9 +48,9 @@ def requested_evaluator(model, X_test, y_test):
         AUC = roc_auc_score(y_true, y_proba[:,1])
         PR_AUC = pr_auc(y_true, y_proba[:,1])
     res['AUC'] = AUC
-    res['PR-Curve'] = PR_AUC
+    res['PR_AUC'] = PR_AUC
 
-    # print(classification_report(y_true, y_pred))
+
     accuracy = accuracy_score(y_true, y_pred)
     cnf_matrix = confusion_matrix(y_true, y_pred)
     FP = cnf_matrix.sum(axis=0) - np.diag(cnf_matrix)
@@ -66,20 +63,25 @@ def requested_evaluator(model, X_test, y_test):
     TP = TP.astype(float)
     TN = TN.astype(float)
 
-    TPR = TP/(TP+FN)
-    res['TPR'] = TPR.mean()
-
-    # Precision or positive predictive value
-    PPV = TP/(TP+FP)
-    res['Precision'] = PPV.mean()
+    TPR = np.divide(TP, (TP+FN), out=np.zeros_like(TP), where=(TP+FN)!=0).mean()
+    # TPR = TP/(TP+FN)
+    # TPR = np.nan_to_num(TPR).mean()
+    res['TPR'] = TPR
 
     # Fall out or false positive rate
-    FPR = FP/(FP+TN)
-    res['FPR'] = FPR.mean()
+    FPR = np.divide(FP, (FP+TN), out=np.zeros_like(FP), where=(FP+TN)!=0).mean()
+    # FPR = FP/(FP+TN)
+    # FPR = np.nan_to_num(FPR).mean()
+    res['FPR'] = FPR
+
+    #  Precision orpositive predictive value
+    # PPV = TP/(TP+FP)
+    res['PPV'] = classification_report(y_true,y_pred, output_dict=True, zero_division=0)['macro avg']['precision']
 
     # Overall accuracy
-    ACC = (TP+TN)/(TP+FP+FN+TN)
-    res['Accuracy'] = ACC.mean()
-    for k,v in res.items():
-        res[k] = np.nan_to_num(v)
+    num, dem = (TP+TN), (TP+FP+FN+TN)
+    ACC = np.divide(num, dem, out=np.zeros_like(num), where=(dem)!=0).mean()
+    # ACC = (TP+TN)/(TP+FP+FN+TN)
+    # ACC = np.nan_to_num(ACC).mean()
+    res['ACC'] = ACC
     return res
