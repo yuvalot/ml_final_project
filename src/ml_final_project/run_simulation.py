@@ -1,11 +1,11 @@
 import os
 import argparse
 import pandas as pd
-from utils.simulators.dataset_simulator import DatasetSimulator
-from utils.data.dataset2xy import dataset2Xy
-from utils.data.load import load_dataset
-from utils.runners.runners_factory import get_runner
-from consts import scan_spaces
+from .utils.simulators.dataset_simulator import DatasetSimulator
+from .utils.data.dataset2xy import dataset2Xy
+from .utils.data.load import load_dataset
+from .utils.runners.runners_factory import get_runner
+from .consts import scan_spaces
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--dataset-csv-path', '-d', dest='csv_path', action='store', required=True, help='path to a csv file containing the dataset to simulate on')
