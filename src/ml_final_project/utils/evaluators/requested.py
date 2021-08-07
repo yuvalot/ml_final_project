@@ -6,6 +6,7 @@ from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import auc
 from sklearn.metrics import average_precision_score
 from sklearn.preprocessing import label_binarize
+import numpy as np
 
 
 def pr_auc(y_true, y_pred):
@@ -50,7 +51,7 @@ def requested_evaluator(model, X_test, y_test):
     # print(classification_report(y_true, y_pred))
     accuracy = accuracy_score(y_true, y_pred)
     cnf_matrix = confusion_matrix(y_true, y_pred)
-    FP = cnf_matrix.sum(axis=0) - np.diag(cnf_matrix)  
+    FP = cnf_matrix.sum(axis=0) - np.diag(cnf_matrix)
     FN = cnf_matrix.sum(axis=1) - np.diag(cnf_matrix)
     TP = np.diag(cnf_matrix)
     TN = cnf_matrix.sum() - (FP + FN + TP)
@@ -62,15 +63,15 @@ def requested_evaluator(model, X_test, y_test):
 
     TPR = TP/(TP+FN)
     res['TPR'] = TPR
-    
+
     # Precision or positive predictive value
     PPV = TP/(TP+FP)
     res['PPV'] = PPV
-    
+
     # Fall out or false positive rate
     FPR = FP/(FP+TN)
     res['FPR'] = FPR
-    
+
     # Overall accuracy
     ACC = (TP+TN)/(TP+FP+FN+TN)
     res['ACC'] = ACC
