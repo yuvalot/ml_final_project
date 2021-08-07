@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import keras
+import tensorflow as tf
 
 from ..evaluators.default import default_evaluator
 from ..nn.network import network
@@ -15,7 +15,7 @@ class BaseRunner:
 
     def evaluate(self, X_train, X_test, y_train, y_test, output_dim, evaluator=default_evaluator):
         model = network(input_size=X_train.shape[1], inner_dim=64, output_dim=output_dim)
-        es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+        es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
         model.compile(optimizer=self._get_optimizer(), loss="categorical_crossentropy", metrics=["accuracy"])
         start_training_time = datetime.now()
         model.fit(X_train, y_train, epochs=100, verbose=0, callbacks=[es], validation_split=.2)

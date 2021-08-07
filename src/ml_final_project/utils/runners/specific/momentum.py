@@ -1,8 +1,8 @@
-import keras
+import tensorflow as tf
 
 from ..base_runner import BaseRunner
 
 
 class MomentumAlgorithmRunner(BaseRunner):
     def _get_optimizer(self):
-        return keras.optimizers.SGD(**self.hyper_parameters)
+        return tf.keras.optimizers.SGD(**self.hyper_parameters)

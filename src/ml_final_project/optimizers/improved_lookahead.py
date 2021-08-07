@@ -26,6 +26,7 @@ class ImprovedLookahead(tf.keras.optimizers.Optimizer):
             optimizer: types.Optimizer,
             sync_period: int = 6,
             slow_step_size: types.FloatTensorLike = 0.5,
+            momentum=0.5,
             name: str = "ImprovedLookahead",
             **kwargs,
     ):
@@ -61,7 +62,7 @@ class ImprovedLookahead(tf.keras.optimizers.Optimizer):
         self._initialized = False
         self._track_trackable(self._optimizer, "lh_base_optimizer")
         # modified code:
-        self.momentum = 0.5
+        self.momentum = momentum
         self.last_delta_weight = {}
         ###
 

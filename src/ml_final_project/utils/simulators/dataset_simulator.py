@@ -1,3 +1,7 @@
+import pandas as pd
+from sklearn.model_selection import KFold
+
+from ..evaluators.requested import requested_evaluator
 from ..hyperparameters.hyperparameter_scanner import HyperParameterScanner
 
 
@@ -20,5 +24,19 @@ class DatasetSimulator:
 
         optimal_hyper_parameters = scanner.optimize()
         runner = self.algorithm_runner_class(optimal_hyper_parameters)
+        evaluation, training_time = runner.evaluate(X_train, X_test, y_train, y_test, self.output_dim,
+                                                    evaluator=requested_evaluator)
+        return evaluation, training_time, optimal_hyper_parameters
 
-        return runner.evaluate(X_train, X_test, y_train, y_test, self.output_dim)
+    def evaluate(self):
+        kf = KFold(n_splits=10, random_state=None, shuffle=False)
+        results = []
+
+        for i, (train_index, test_index) in enumerate(kf.split(self.X)):
+            X_train, X_test = self.X[train_index], self.X[test_index]
+            y_train, y_test = self.y[train_index], self.y[test_index]
+            evaluation, training_time, hp = self.evaluate_batch(X_train, X_test, y_train, y_test)
+            results.append({'Cross Validation [1-10]': 1 + i, 'Hyper-Parameters Values': hp, **evaluation,
+                            'Training Time': training_time})
+
+        return pd.DataFrame(results)
