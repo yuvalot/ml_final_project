@@ -7,6 +7,8 @@ from .utils.data.load import load_dataset
 from .utils.runners.runners_factory import get_runner
 from .consts import scan_spaces
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--dataset-csv-path', '-d', dest='csv_path', action='store', required=True, help='path to a csv file containing the dataset to simulate on')
 parser.add_argument('--output-csv-path', '-o', dest='res_path', action='store', required=True, help='path to a csv file to write the results to')
