@@ -6,7 +6,7 @@ from ..evaluators.default import default_evaluator
 from ..nn.network import network
 
 
-class BaseAlgorithmRunner:
+class BaseRunner:
     def __init__(self, hyper_parameters):
         self.hyper_parameters = hyper_parameters
 
