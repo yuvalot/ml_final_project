@@ -6,4 +6,10 @@ from ..base_runner import BaseRunner
 
 class LookaheadAlgorithmRunner(BaseRunner):
     def _get_optimizer(self):
-        return tfa.optimizers.Lookahead(tf.keras.optimizers.SGD(), **self.hyper_parameters)
+        hp = {k: v for k, v in self.hyper_parameters.items() if k != 'fast_step_size'}
+        if 'fast_step_size' in self.hyper_parameters:
+            fast_step = tf.keras.optimizers.SGD(learning_rate=self.hyper_parameters['fast_step_size'])
+        else:
+            fast_step = tf.keras.optimizers.SGD()
+
+        return tfa.optimizers.Lookahead(fast_step, **hp)
