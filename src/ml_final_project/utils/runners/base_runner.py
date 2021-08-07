@@ -14,7 +14,7 @@ class BaseRunner:
         raise NotImplementedError()
 
     def evaluate(self, X_train, X_test, y_train, y_test, output_dim, evaluator=default_evaluator):
-        model = network(input_size=X_train.shape[1], inner_dim=64, output_dim=output_dim)
+        model = network(input_size=X_train.shape[1], inner_dim=32, output_dim=output_dim)
         es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
         model.compile(optimizer=self._get_optimizer(), loss="categorical_crossentropy", metrics=["accuracy"])
         start_training_time = datetime.now()

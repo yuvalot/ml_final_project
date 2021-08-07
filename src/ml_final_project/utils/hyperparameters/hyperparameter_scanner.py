@@ -22,7 +22,7 @@ class HyperParameterScanner:
 
         optimizer.maximize(
             init_points=5,
-            n_iter=1,
+            n_iter=45,
         )
 
         return optimizer.max['params']
