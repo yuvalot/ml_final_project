@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -34,10 +36,13 @@ def pr_auc(y_true, y_pred):
 
 
 def requested_evaluator(model, X_test, y_test):
+    start_training_time = datetime.now()
     y_proba = model.predict(X_test)
+    end_training_time = datetime.now()
+    inference_time = (end_training_time - start_training_time).total_seconds() * (1000 / X_test.shape[0])
     y_pred = np.argmax(y_proba, axis=1)
     y_true = np.argmax(y_test, axis=1)
-    res = {}
+    res = {'Inference Time': inference_time}
 
     if y_proba.shape[1] > 2: # multiclass version
         AUC = roc_auc_score(y_true, y_proba, average='macro', multi_class='ovr')
@@ -46,7 +51,7 @@ def requested_evaluator(model, X_test, y_test):
         AUC = roc_auc_score(y_true, y_proba[:,1])
         PR_AUC = pr_auc(y_true, y_proba[:,1])
     res['AUC'] = AUC
-    res['PR_AUC'] = PR_AUC
+    res['PR-Curve'] = PR_AUC
 
     # print(classification_report(y_true, y_pred))
     accuracy = accuracy_score(y_true, y_pred)
@@ -66,7 +71,7 @@ def requested_evaluator(model, X_test, y_test):
 
     # Precision or positive predictive value
     PPV = TP/(TP+FP)
-    res['PPV'] = PPV
+    res['Precision'] = PPV
 
     # Fall out or false positive rate
     FPR = FP/(FP+TN)
@@ -74,7 +79,7 @@ def requested_evaluator(model, X_test, y_test):
 
     # Overall accuracy
     ACC = (TP+TN)/(TP+FP+FN+TN)
-    res['ACC'] = ACC
+    res['Accuracy'] = ACC
     for k,v in res.items():
         res[k] = np.nan_to_num(v)
     return res
