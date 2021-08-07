@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, StratifiedKFold
 
 from ..evaluators.requested import requested_evaluator
 from ..hyperparameters.hyperparameter_scanner import HyperParameterScanner
@@ -29,10 +29,10 @@ class DatasetSimulator:
         return evaluation, training_time, optimal_hyper_parameters
 
     def evaluate(self):
-        kf = KFold(n_splits=10, random_state=None, shuffle=False)
+        kf = StratifiedKFold(n_splits=10, random_state=None, shuffle=False)
         results = []
 
-        for i, (train_index, test_index) in enumerate(kf.split(self.X)):
+        for i, (train_index, test_index) in enumerate(kf.split(self.X, self.y)):
             X_train, X_test = self.X[train_index], self.X[test_index]
             y_train, y_test = self.y[train_index], self.y[test_index]
             evaluation, training_time, hp = self.evaluate_batch(X_train, X_test, y_train, y_test)
