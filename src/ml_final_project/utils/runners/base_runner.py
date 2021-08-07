@@ -18,6 +18,6 @@ class BaseRunner:
         es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
         model.compile(optimizer=self._get_optimizer(), loss="categorical_crossentropy", metrics=["accuracy"])
         start_training_time = datetime.now()
-        model.fit(X_train, y_train, epochs=50, verbose=0, callbacks=[es], validation_split=.2)
+        model.fit(X_train, y_train, epochs=10, verbose=0, callbacks=[es], validation_split=.2)
         end_training_time = datetime.now()
         return evaluator(model, X_test, y_test), (end_training_time - start_training_time).total_seconds()

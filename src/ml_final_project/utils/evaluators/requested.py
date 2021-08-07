@@ -67,19 +67,19 @@ def requested_evaluator(model, X_test, y_test):
     TN = TN.astype(float)
 
     TPR = TP/(TP+FN)
-    res['TPR'] = TPR
+    res['TPR'] = TPR.mean()
 
     # Precision or positive predictive value
     PPV = TP/(TP+FP)
-    res['Precision'] = PPV
+    res['Precision'] = PPV.mean()
 
     # Fall out or false positive rate
     FPR = FP/(FP+TN)
-    res['FPR'] = FPR
+    res['FPR'] = FPR.mean()
 
     # Overall accuracy
     ACC = (TP+TN)/(TP+FP+FN+TN)
-    res['Accuracy'] = ACC
+    res['Accuracy'] = ACC.mean()
     for k,v in res.items():
         res[k] = np.nan_to_num(v)
     return res
