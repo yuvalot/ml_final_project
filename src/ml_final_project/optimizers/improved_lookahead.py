@@ -4,7 +4,7 @@ from typeguard import typechecked
 
 
 class ImprovedLookahead(tf.keras.optimizers.Optimizer):
-    """This class allows to extend optimizers with the lookahead mechanism.
+    """This class allows to extend optimizers with the lookahead mechanism - with the addition of the momentum concept.
     The mechanism is proposed by Michael R. Zhang et.al in the paper
     [Lookahead Optimizer: k steps forward, 1 step back]
     (https://arxiv.org/abs/1907.08610v1). The optimizer iteratively updates two
@@ -13,10 +13,11 @@ class ImprovedLookahead(tf.keras.optimizers.Optimizer):
     directions of the "fast weights" and the two sets of weights are
     synchronized. This method improves the learning stability and lowers the
     variance of its inner optimizer.
+
     Example of usage:
     ```python
     opt = tf.keras.optimizers.SGD(learning_rate)
-    opt = tfa.optimizers.Lookahead(opt)
+    opt = ImprovedLookahead(opt)
     ```
     """
 
@@ -101,7 +102,7 @@ class ImprovedLookahead(tf.keras.optimizers.Optimizer):
         ###
         # modified code:
         weight_delta = slow_step_size * (var - slow_var)
-        step_back = slow_var + self.momentum * (weight_delta + self.last_delta_weight[str(weight_delta.shape)])
+        step_back = slow_var + weight_delta + self.momentum * self.last_delta_weight[str(weight_delta.shape)]
         self.last_delta_weight[str(weight_delta.shape)] = weight_delta
         ###
         sync_cond = tf.equal(

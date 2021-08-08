@@ -2,6 +2,10 @@ from tensorflow.keras.utils import to_categorical
 
 
 def dataset2Xy(dataset):
+    """Convert a dataset (pd.DataFrame) to X, y and output_dim
+        where X is the features, y is the labels (one-hot vectors),
+        and output_dim is the number of labels overall.
+    """
     output_col = dataset.columns[-1]
     output_dim = len(dataset[output_col].value_counts())
     X = dataset.drop(columns=[output_col]).to_numpy()
