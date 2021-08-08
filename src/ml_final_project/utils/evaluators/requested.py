@@ -35,11 +35,14 @@ def pr_auc(y_true, y_pred):
 
 
 def requested_evaluator(model, X_test, y_test):
+    start_training_time = datetime.now()
     y_proba = model.predict(X_test)
+    end_training_time = datetime.now()
+    inference_time = (end_training_time - start_training_time).total_seconds() * (1000 / X_test.shape[0])
     y_pred = np.argmax(y_proba, axis=1)
     y_true = np.argmax(y_test, axis=1)
 
-    res = {}
+    res = {'Inference Time': inference_time}
     if y_proba.shape[1] > 2: # multiclass version
         AUC = roc_auc_score(y_true, y_proba, average='macro', multi_class='ovr')
         PR_AUC = pr_auc(y_true, y_proba)
