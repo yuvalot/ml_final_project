@@ -18,6 +18,8 @@ parser.add_argument('--network-conf', '-n', dest='network_conf', action='store',
 args = parser.parse_args()
 
 if __name__ == '__main__':
+    '''The script to run a full simulation.'''
+
     for k, v in json.loads(args.network_conf).items():
         network_conf[k] = v
 
