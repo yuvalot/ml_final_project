@@ -35,6 +35,17 @@ def pr_auc(y_true, y_pred):
 
 
 def requested_evaluator(model, X_test, y_test):
+    """A advanced evaluator that takes in a model,
+        and a test set, and returns the the requested metrics.
+
+        Args:
+          model: The model to evaluate.
+          X_test: The features matrix of the test set.
+          y_test: The one-hot labels matrix of the test set.
+
+        Returns:
+          A dict with the metrics.
+    """
     start_training_time = datetime.now()
     y_proba = model.predict(X_test)
     end_training_time = datetime.now()

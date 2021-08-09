@@ -39,6 +39,9 @@ class ImprovedLookahead(tf.keras.optimizers.Optimizer):
                 Enable lookahead mechanism by setting it with a positive value.
             slow_step_size: A floating point value.
                 The ratio for updating the slow weights.
+            momentum: A floating point hyperparameter that control how history is being expressed in the current step.
+                Affects only the slow step learning.
+                Defaults to 0.5, i.e., vanilla gradient
             name: Optional name for the operations created when applying
                 gradients. Defaults to "Lookahead".
             **kwargs: keyword arguments. Allowed to be {`clipnorm`,

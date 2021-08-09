@@ -5,6 +5,7 @@ from ....optimizers.improved_lookahead import ImprovedLookahead
 
 
 class ImprovedLookaheadAlgorithmRunner(BaseRunner):
+    """A version of the BaseRunner that uses the Improved Lookahead optimizer. """
     def _get_optimizer(self):
         hp = {k: v for k, v in self.hyper_parameters.items() if k != 'fast_step_size'}
 
